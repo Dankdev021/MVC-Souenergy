@@ -33,6 +33,12 @@ $router['loja'] = [
     'action' => "loja"
 ];
 
+$router['confirmar_email'] = [
+    'rota' => '/confirmar_email',
+    'controller' => 'Main',
+    'action' => 'confirmar_email'
+];
+
 $router['Login'] = [
     'rota' => '/Login',
     'controller' => 'Main',
@@ -44,6 +50,8 @@ $router['Login_Submit'] = [
     'controller' => 'Main',
     'action' => 'Login_Submit'
 ];
+
+
 
 
 
