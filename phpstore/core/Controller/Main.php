@@ -89,21 +89,24 @@ class Main
 
         $cliente = new Clientes();
 
-        // if ($cliente->verificar_email_existe($_POST['text_email'])) {
+        /* if ($cliente->verificar_email_existe($_POST['text_email'])) {
 
-        //     $_SESSION['error'] = 'Já existe um email cadastrado';
-        //     $this->novo_cliente();
-        //     return;
-        // }
-
+             $_SESSION['error'] = 'Já existe um email cadastrado';
+             $this->novo_cliente();
+             return;
+         }
+        */
 
         //inserir novo cliente na base de dados e devolver o purl
         $email_cliente = strtolower(trim($_POST['text_email']));
-        $purl = $cliente->registrar_cliente();
+        $purl = Store::criarhash();
 
         //enviar do email para o cliente
         $email = new EnviarEmail();
         $resultado = $email->enviar_email_confirmacao_novo_cliente($email_cliente, $purl);
+        if ($resultado == true) {
+            $cliente->registrar_cliente($purl);
+        }
 
         if ($resultado == true) {
             echo 'Email enviado';
@@ -124,14 +127,55 @@ class Main
     {
 
         //Verifica se já existe um usuário logado
+        if (Store::clientelog()) {
+            Store::layout([
+                'inicio'
+            ]);
+            return;
+        }
 
+        //Apresentação do formulário de login
         Store::layout([
             'Layout/Html_Header',
-            'Layout/Header',    //Header que contém a navegação do header
+            'Layout/Header',
             'Login',
             'Layout/Footer',
             'Layout/Html_Footer',
         ]);
+    }
+
+
+    public function Login_Submit()
+    {
+        //Verifica se já existe um usuário logado
+        if (Store::clientelog()) {
+            Store::layout([
+                'inicio'
+            ]);
+            return;
+        }
+        //Verifica se foi efetuado o Post de Login
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+            Store::layout([
+                'inicio'
+            ]);
+            return;
+        }
+        //Valida se os campos estão corretos
+        //Buscar informações no banco (ver o Login)
+
+        if (
+            !isset($_POST['text_usuario']) ||
+            !isset($_POST['text_password']) ||
+            !filter_var(trim($_POST['text_usuario']), FILTER_SANITIZE_EMAIL)
+        ) {
+            //Erro ao preencher o formulário
+            $_SESSION['erro'] = 'Erro de preenchimento de formulário';
+            Store::layout([
+                'Login'
+            ]);
+            return;
+        }
     }
 
     //==========================================================

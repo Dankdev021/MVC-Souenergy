@@ -36,7 +36,7 @@ class EnviarEmail
             $mail->addAddress($email);     //Add a recipien              
 
             //assunto
-            $mail->isHTML(true);                                  //Set email format to HTML
+            $mail->isHTML(true);                               //Set email format to HTML
             $mail->Subject = APP_NAME . ' - Confirmação de email.';
 
             //mensagem

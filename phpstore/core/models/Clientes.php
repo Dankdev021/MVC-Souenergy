@@ -4,6 +4,7 @@ namespace Core\Models;
 
 use Core\Classes\Database;
 use Core\Classes\Store;
+use Exception;
 
 class Clientes
 {
@@ -29,43 +30,44 @@ class Clientes
 
     //==========================================================
 
-    public function registrar_cliente()
+    public function registrar_cliente(string $purl)
     {
+        try {
+            //registra o novo cliente no banco de dados
+            $bd = new Database();
 
-        //registra o novo cliente no banco de dados
-        $bd = new Database();
+            //cria uma hash pro registro do cliente
+            //parametros
+            $params = [
+                ':email' => strtolower(trim($_POST['text_email'])),
+                ':senha' => password_hash(trim($_POST['text_senha_1']), PASSWORD_DEFAULT),
+                ':nome_completo' => (trim($_POST['nome_completo'])),
+                ':morada' => (trim($_POST['text_morada'])),
+                ':cidade' => (trim($_POST['text_cidade'])),
+                ':telefone' => (trim($_POST['text_telefone'])),
+                ':purl' => $purl,
+                ':activo' => 0
 
-        //cria uma hash pro registro do cliente
-        $purl = Store::criarhash();
+            ];
+            $bd->insert("INSERT INTO clientes VALUES (0, 
+            :email,
+            :senha,
+            :nome_completo,
+            :morada,
+            :cidade,
+            :telefone,
+            :purl,
+            :activo,
+            NOW(),
+            NOW(),
+            NULL
+            )
+            ", $params);
 
-        //parametros
-        $params = [
-            ':email' => strtolower(trim($_POST['text_email'])),
-            ':senha' => password_hash(trim($_POST['text_senha_1']), PASSWORD_DEFAULT),
-            ':nome_completo' => (trim($_POST['nome_completo'])),
-            ':morada' => (trim($_POST['text_morada'])),
-            ':cidade' => (trim($_POST['text_cidade'])),
-            ':telefone' => (trim($_POST['text_telefone'])),
-            ':purl' => $purl,
-            ':activo' => 0
-
-        ];
-        $bd->insert("INSERT INTO clientes VALUES (0, 
-        :email,
-        :senha,
-        :nome_completo,
-        :morada,
-        :cidade,
-        :telefone,
-        :purl,
-        :activo,
-        NOW(),
-        NOW(),
-        NULL
-        )
-         ", $params);
-
-        //retorna o purl criado
-        return $purl;
+            //retorna o purl criado
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
     }
 }

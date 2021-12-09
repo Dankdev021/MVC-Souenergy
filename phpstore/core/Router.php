@@ -33,11 +33,19 @@ $router['loja'] = [
     'action' => "loja"
 ];
 
-$router['login'] = [
+$router['Login'] = [
     'rota' => '/Login',
     'controller' => 'Main',
     'action' => 'Login'
 ];
+
+$router['Login_Submit'] = [
+    'rota' => '/Login_Submit',
+    'controller' => 'Main',
+    'action' => 'Login_Submit'
+];
+
+
 
 $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 foreach ($router as $rota) :
