@@ -38,4 +38,9 @@ class Store
         $chars = '01234567890123456789abcdefghijklmnopqrstuvxwyzabcdefghijklmnopqrstuvxwyzABCDEFGHIJKLMNOPQRSTUVXWYZABCDEFGHIJKLMNOPQRSTUVXWYZ';
         return substr(str_shuffle($chars), 0, $num_caracter);
     }
+    public static function redirect($rota = ''){
+
+        //faz o redirecionamento para a URL desejada (rota)
+        header("Location: " . BASE_URL . "/$rota");
+    }
 }

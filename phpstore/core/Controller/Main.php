@@ -109,7 +109,15 @@ class Main
         }
 
         if ($resultado == true) {
-            echo 'Email enviado';
+            Store::layout([
+                'Layout/Html_Header',
+                'Layout/Header',    
+                'criar_cliente_sucesso',
+                'Layout/Footer',
+                'Layout/Html_Footer',
+            ]);
+            return;
+            
         } else {
             echo 'Aconteceu um erro';
         }
@@ -117,6 +125,48 @@ class Main
 
         //Criar o link purl
         $link_purl = "http://localhost/PHPSTORE/public/?a=confirmar_email&purl=$purl";
+    }
+
+    public function confirmar_email()
+    {
+
+        //verificar se já existe sessão
+        if (Store::clientelog()) {
+            $this->index();
+            return;
+        }
+
+        //verificar se existe na query string um purl
+        if (!isset($_GET['purl'])) {
+            $this->index();
+            return;
+        }
+
+        $purl = $_GET['purl'];
+
+        //verifica se o purl é válido
+        if (strlen($purl) != 12) {
+            $this->index();
+            return;
+        }
+
+        $cliente = new Clientes();
+        $resultado = $cliente->validar_email($purl);
+
+        if ($resultado) {
+
+
+            Store::layout([
+                'Layout/Html_Header',
+                'Layout/Header',
+                'criar_cliente_sucesso',
+                'Layout/Footer',
+                'Layout/Html_Footer',
+            ]);
+        } else {
+            //redirecionar para a página inicial
+            Store::redirect();
+        }
     }
 
 
@@ -128,9 +178,7 @@ class Main
 
         //Verifica se já existe um usuário logado
         if (Store::clientelog()) {
-            Store::layout([
-                'inicio'
-            ]);
+            Store::redirect();
             return;
         }
 
@@ -149,16 +197,12 @@ class Main
     {
         //Verifica se já existe um usuário logado
         if (Store::clientelog()) {
-            Store::layout([
-                'inicio'
-            ]);
+            Store::redirect();
             return;
         }
         //Verifica se foi efetuado o Post de Login
         if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-            Store::layout([
-                'inicio'
-            ]);
+            Store::redirect();
             return;
         }
         //Valida se os campos estão corretos
@@ -171,9 +215,7 @@ class Main
         ) {
             //Erro ao preencher o formulário
             $_SESSION['erro'] = 'Erro de preenchimento de formulário';
-            Store::layout([
-                'Login'
-            ]);
+            Store::redirect();
             return;
         }
     }
