@@ -16,8 +16,8 @@ use core\Classes\Store;
 
             <!--Verifica se existe cliente na sessão-->
             <?php if (Store::Clientelog()) :  ?>
-                <a href="?a=Perfil" class="nav-item">Minha conta</a>
-                <a href="?a=Logout" class="nav-item">Logout</a>
+                <a href="/Perfil" class="nav-item">Perfil</a>
+                <a href="/Logout" class="nav-item">Logout</a>
 
             <?php else : ?>
 

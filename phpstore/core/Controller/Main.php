@@ -104,20 +104,19 @@ class Main
         //enviar do email para o cliente
         $email = new EnviarEmail();
         $resultado = $email->enviar_email_confirmacao_novo_cliente($email_cliente, $purl);
-        if ($resultado == true) {
+        if ($resultado) {
             $cliente->registrar_cliente($purl);
         }
 
         if ($resultado == true) {
             Store::layout([
                 'Layout/Html_Header',
-                'Layout/Header',    
-                'criar_cliente_sucesso',
+                'Layout/Header',
+                'Criar_Cliente_Sucesso',
                 'Layout/Footer',
                 'Layout/Html_Footer',
             ]);
             return;
-            
         } else {
             echo 'Aconteceu um erro';
         }
@@ -159,7 +158,7 @@ class Main
             Store::layout([
                 'Layout/Html_Header',
                 'Layout/Header',
-                'criar_cliente_sucesso',
+                'ContaConfirmadaSucesso',
                 'Layout/Footer',
                 'Layout/Html_Footer',
             ]);
@@ -215,8 +214,35 @@ class Main
         ) {
             //Erro ao preencher o formulário
             $_SESSION['erro'] = 'Erro de preenchimento de formulário';
-            Store::redirect();
+            Store::redirect('Login');
             return;
+        }
+
+        //prepara os dados para o model 
+        $usuario = trim(strtolower($_POST['text_usuario']));
+        $senha = trim($_POST['text_password']);
+
+        $parametros = [
+            ':usuario' => $usuario,
+            ':password' => $senha,
+        ];
+        //Carrega o model e verifica se o login é válido 
+        $cliente = new Clientes();
+        $resultado = $cliente->validar_login($usuario, $senha);
+
+        //Analisa o resultado 
+
+        //Login inválido
+        if (is_bool($resultado)) {
+            $_SESSION['erro'] = 'Login inválido';
+            Store::redirect('Login');
+            return;
+        } else {
+            //Login válido
+            //$_SESSION['cliente'] = $resultado;
+
+            echo '<pre>';
+            print_r($resultado);
         }
     }
 

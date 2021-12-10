@@ -70,6 +70,7 @@ class Clientes
             return false;
         }
     }
+    //=========================================================
 
     public function validar_email($purl)
     {
@@ -96,5 +97,37 @@ class Clientes
         $bd->update("UPDATE clientes SET purl = NULL, activo = 1, update_at = NOW()", $params);
 
         return true;
+    }
+    //=========================================================
+    public function validar_login($usuario, $senha)
+    {
+
+        //Verificar se o login é válido 
+        $parametros = [
+            ':usuario' => $usuario
+        ];
+        $bd = new Database();
+        $resultado = $bd->select("SELECT * FROM clientes WHERE email = :usuario
+        AND activo = 1 AND delete_at IS NULL ", $parametros);
+
+        if (count($resultado) != 1) {
+            return false;
+        } else {
+            //Verificar a senha do usuário
+            $usuario = $resultado[0];
+
+            if (!password_verify($senha, $usuario->$senha)) {
+                //Senha inválida
+                return false;
+            } else {
+                //login válido. Coloca os dados na sessão
+                $_SESSION['cliente'] = $resultado->id_cliente;
+                $_SESSION['usuario'] = $resultado->email;
+                $_SESSION['nome_cliente'] = $resultado->nome_completo;
+
+                //redirecionar para o inicio da loja
+                Store::redirect();
+            }
+        }
     }
 }

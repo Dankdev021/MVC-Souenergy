@@ -17,6 +17,9 @@ Dentro da pasta Public também estará contido o arquivo Index.php.
 
 <vendor> Pasta responsável por armazenar o arquivo de autoload.
 
+#core - Esqueleto principal da aplicação onde contém a conexão com o banco de dados
+#EnviarEmail - R
+
 
 
 
