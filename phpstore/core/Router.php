@@ -39,6 +39,7 @@ $router['confirmar_email'] = [
     'action' => 'confirmar_email'
 ];
 
+
 $router['Login'] = [
     'rota' => '/Login',
     'controller' => 'Main',

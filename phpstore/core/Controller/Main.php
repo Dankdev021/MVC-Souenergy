@@ -123,18 +123,16 @@ class Main
 
 
         //Criar o link purl
-        $link_purl = "http://localhost/PHPSTORE/public/?a=confirmar_email&purl=$purl";
+
     }
 
     public function confirmar_email()
     {
-
-        //verificar se já existe sessão
+        // verificar se já existe sessão
         if (Store::clientelog()) {
             $this->index();
             return;
         }
-
         //verificar se existe na query string um purl
         if (!isset($_GET['purl'])) {
             $this->index();
@@ -152,25 +150,20 @@ class Main
         $cliente = new Clientes();
         $resultado = $cliente->validar_email($purl);
 
-        if ($resultado) {
-
-
+        if ($resultado == true) {
             Store::layout([
                 'Layout/Html_Header',
                 'Layout/Header',
-                'ContaConfirmadaSucesso',
+                'Views/ContaConfirmadaSucesso',
                 'Layout/Footer',
                 'Layout/Html_Footer',
             ]);
         } else {
             //redirecionar para a página inicial
-            Store::redirect();
+            //Store::redirect();
+            echo 'erro';
         }
     }
-
-
-
-
 
     public function login()
     {

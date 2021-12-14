@@ -10,13 +10,13 @@ use PHPMailer\PHPMailer\Exception;
 class EnviarEmail
 {
 
-    public function enviar_email_confirmacao_novo_cliente($email        , $purl)
+    public function enviar_email_confirmacao_novo_cliente($email, $purl)
     {
 
         // envia um email para o novo cliente no sentido de confirmar o email
 
         // constroi o purl (link para a validação do email)
-        $link = BASE_URL . '/confirmar_email&purl=' . $purl;
+        $link = BASE_URL . '/email_confirmado' . $purl;
 
         $mail = new PHPMailer(true);
 
@@ -44,7 +44,7 @@ class EnviarEmail
             $html = '<p>Seja bem-vindo a nossa loja' . APP_NAME . '.</p>';
             $html .= '<p>Para poder entrar na nossa loja, necessita confirmar o seu email.</p>';
             $html .= '<p>Para confirmar o email, clique no link abaixo:</p>';
-            $html .= '<p><a href='.$link.'>Confirmar Email</a></p>';
+            $html .= '<p><a href=' . $link . '>Confirmar Email</a></p>';
             $html .= '<p><i><small>' . APP_NAME . '</small></i></p>';
 
             $mail->Body = $html;

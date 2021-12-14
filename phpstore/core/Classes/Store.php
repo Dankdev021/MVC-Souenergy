@@ -29,7 +29,12 @@ class Store
     public static function clientelog()
     {
         //Verifica se existe um cliente com sessão iniciada
-        return isset($_SESSION['cliente']);
+        //return isset($_SESSION['cliente']);
+        if (isset($_SESSION['cliente']) && $_SESSION['cliente'] == true) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static function criarhash($num_caracter = 12)
@@ -38,7 +43,8 @@ class Store
         $chars = '01234567890123456789abcdefghijklmnopqrstuvxwyzabcdefghijklmnopqrstuvxwyzABCDEFGHIJKLMNOPQRSTUVXWYZABCDEFGHIJKLMNOPQRSTUVXWYZ';
         return substr(str_shuffle($chars), 0, $num_caracter);
     }
-    public static function redirect($rota = ''){
+    public static function redirect($rota = '')
+    {
 
         //faz o redirecionamento para a URL desejada (rota)
         header("Location: " . BASE_URL . "/$rota");
