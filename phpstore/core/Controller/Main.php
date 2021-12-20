@@ -13,12 +13,6 @@ class Main
     //Apresenta a pagina index
     public function index()
     {
-
-        /*
-        1. Carregar e tratar dados (cálculos) e (Base de dados)
-        2. Apresentar o layout (Views)
-        */
-
         Store::layout([
             'Layout/Html_Header',
             'Layout/Header',    //Header que contém a navegação do header

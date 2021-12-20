@@ -15,6 +15,10 @@ class ComposerStaticInitd0bae84b134f047cc397299bc87c5036
         array (
             'PHPMailer\\PHPMailer\\' => 20,
         ),
+        'F' => 
+        array (
+            'Firebase\\JWT\\' => 13,
+        ),
         'D' => 
         array (
             'DanielSousa\\Phpstore\\' => 21,
@@ -29,6 +33,10 @@ class ComposerStaticInitd0bae84b134f047cc397299bc87c5036
         'PHPMailer\\PHPMailer\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
+        ),
+        'Firebase\\JWT\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
         'DanielSousa\\Phpstore\\' => 
         array (
