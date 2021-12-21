@@ -1,6 +1,8 @@
 <?php
 
 use Core\Controller\Main;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 $router = array();
 
@@ -63,7 +65,13 @@ foreach ($router as $rota) :
         return;
     endif;
 endforeach;
-
+$key = "Dankdev021";
+$payload = array(
+    "iss" => "http://example.org",
+    "aud" => "http://localhost:8000",
+    "iat" => 1356999524,
+    "nbf" => 1357000000
+);
 $ctr = new Main();
 $ctr->index();
 return;
