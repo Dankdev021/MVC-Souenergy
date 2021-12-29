@@ -115,19 +115,21 @@ class Main
             echo 'Aconteceu um erro';
         }
 
-
         //Criar o link purl
 
     }
 
+    // ===========================================================
     public function confirmar_email()
     {
-        // verificar se já existe sessão
+
+        // verifica se já existe sessao
         if (Store::clientelog()) {
             $this->index();
             return;
         }
-        //verificar se existe na query string um purl
+
+        // verificar se existe na query string um purl
         if (!isset($_GET['purl'])) {
             $this->index();
             return;
@@ -135,7 +137,7 @@ class Main
 
         $purl = $_GET['purl'];
 
-        //verifica se o purl é válido
+        // verifica se o purl é válido
         if (strlen($purl) != 12) {
             $this->index();
             return;
@@ -144,20 +146,40 @@ class Main
         $cliente = new Clientes();
         $resultado = $cliente->validar_email($purl);
 
-        if ($resultado == true) {
-            Store::layout([
-                'Layout/Html_Header',
-                'Layout/Header',
-                'Views/ContaConfirmadaSucesso',
-                'Layout/Footer',
-                'Layout/Html_Footer',
+        if (!$resultado) {
+
+            // apresenta o layout para informar a conta foi confirmada com sucesso
+            Store::Layout([
+                'layout/html_header',
+                'layout/header',
+                'ContaConfirmadaSucesso',
+                'layout/footer',
+                'layout/html_footer',
             ]);
+            return;
         } else {
-            //redirecionar para a página inicial
-            //Store::redirect();
-            echo 'erro';
+
+            // redirecionar para a página inicial
+            Store::redirect();
         }
     }
+
+    /* public function Contaconf()
+    {
+        //Verifica se já existe um usuário logado
+        if (Store::clientelog()) {
+            Store::redirect();
+            return;
+        }
+        Store::Layout([
+            'layout/html_header',
+            'layout/header',
+            'Contaconf',
+            'layout/footer',
+            'layout/html_footer',
+        ]);
+    }
+*/
 
     public function login()
     {
@@ -177,7 +199,6 @@ class Main
             'Layout/Html_Footer',
         ]);
     }
-
 
     public function Login_Submit()
     {

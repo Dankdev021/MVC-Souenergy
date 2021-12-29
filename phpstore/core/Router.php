@@ -11,6 +11,7 @@ $router['index'] = [
     'controller' =>  "Main",
     'action' => "index"
 ];
+
 $router['novo_cliente'] = [
     'rota' => '/novo-cliente',
     'controller' =>  "Main",
@@ -30,7 +31,7 @@ $router['criar_cliente'] = [
 ];
 
 $router['loja'] = [
-    'rota' => '/loja',
+    'rota' => '/',
     'controller' =>  "Main",
     'action' => "loja"
 ];
@@ -54,11 +55,17 @@ $router['Login_Submit'] = [
     'action' => 'Login_Submit'
 ];
 
+$router['Contaconf'] = [
+    'rota' => '/Contaconf',
+    'controller' => 'Main',
+    'action' => 'Contaconf'
+];
+
 $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-foreach ($router as $rota) :
-    if ($url === $rota['rota']) :
-        $controlador = 'Core\\Controller\\' . ucfirst($rota['controller']);
-        $metodo = $rota['action'];
+foreach ($router as $rotas) :
+    if ($url === $rotas['rota']) :
+        $controlador = 'Core\\Controller\\' . ucfirst($rotas['controller']);
+        $metodo = $rotas['action'];
 
         $ctr = new $controlador();
         $ctr->$metodo();
@@ -72,6 +79,7 @@ $payload = array(
     "iat" => 1356999524,
     "nbf" => 1357000000
 );
+
 $ctr = new Main();
 $ctr->index();
 return;

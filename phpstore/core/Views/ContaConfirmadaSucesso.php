@@ -1,3 +1,9 @@
+<?php
+
+namespace Core\Classes;
+
+?>
+
 <div class="container">
     <div classs="row">
         <div class="col-sm-6 offset-sm-3 my-5 ">
