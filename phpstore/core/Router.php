@@ -13,7 +13,7 @@ $router['index'] = [
 ];
 
 $router['novo_cliente'] = [
-    'rota' => '/novo-cliente',
+    'rota' => '/novo_cliente',
     'controller' =>  "Main",
     'action' => "novo_cliente"
 ];
@@ -25,13 +25,13 @@ $router['carrinho'] = [
 ];
 
 $router['criar_cliente'] = [
-    'rota' => '/criar-cliente',
+    'rota' => '/criar_cliente',
     'controller' =>  "Main",
     'action' => "criar_cliente"
 ];
 
 $router['loja'] = [
-    'rota' => '/',
+    'rota' => '/loja',
     'controller' =>  "Main",
     'action' => "loja"
 ];
@@ -44,22 +44,23 @@ $router['confirmar_email'] = [
 
 
 $router['Login'] = [
-    'rota' => '/Login',
+    'rota' => '/login',
     'controller' => 'Main',
-    'action' => 'Login'
+    'action' => 'login'
 ];
 
-$router['Login_Submit'] = [
-    'rota' => '/Login_Submit',
+$router['login_submit'] = [
+    'rota' => '/login_submit',
     'controller' => 'Main',
-    'action' => 'Login_Submit'
+    'action' => 'login_submit'
 ];
 
-$router['Contaconf'] = [
-    'rota' => '/Contaconf',
+$router['conta_confirmada_sucesso'] = [
+    'rota' => '/conta_confirmada_sucesso',
     'controller' => 'Main',
-    'action' => 'Contaconf'
+    'action' => 'conta_confirmada_sucesso'
 ];
+
 
 $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 foreach ($router as $rotas) :
@@ -72,13 +73,6 @@ foreach ($router as $rotas) :
         return;
     endif;
 endforeach;
-$key = "Dankdev021";
-$payload = array(
-    "iss" => "http://example.org",
-    "aud" => "http://localhost:8000",
-    "iat" => 1356999524,
-    "nbf" => 1357000000
-);
 
 $ctr = new Main();
 $ctr->index();

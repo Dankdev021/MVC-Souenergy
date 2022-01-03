@@ -5,7 +5,7 @@
                 <div>
                     <h3 class="text-center">Login</h3>
 
-                    <form action="/Login_Submmit" method="POST">
+                    <form action="/login_submmit" method="POST">
                         <div class="my-3">
                             <div clas="my-3">
                                 <label> Usuário</label>

@@ -1,64 +1,62 @@
 <?php
 
-namespace Core\Classes;
+namespace core\classes;
 
 use Exception;
 use PDO;
 use PDOException;
 
-/* Gestão de base de dados*/
-
 class Database
 {
 
     private $ligacao;
-    //================================================================================
+
+    // ============================================================
     private function ligar()
     {
-        //Ligação com a base de dados
+        // ligar à base de dados
         $this->ligacao = new PDO(
             'mysql:' .
                 'host=' . MYSQL_SERVER . ';' .
-                'dbname=' . MYSQL_DATABSE . ';',
+                'dbname=' . MYSQL_DATABASE . ';',
             MYSQL_USER,
             MYSQL_PASS,
             array(PDO::ATTR_PERSISTENT => true)
         );
-        // 'charset=' . MYSQL_CHARSET
-        //Atributo que mantém a ligação do servidor com a base de dados
-        // 
 
-        //Debug
+        // debug
         $this->ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
     }
+
+    // ============================================================
     private function desligar()
     {
-        //Encerra a conexão com a base de dados 
+        // desliga-se da base de dados
         $this->ligacao = null;
     }
 
-    //===============================================================
-    //CRUD
-    //===============================================================
-
-    //Verifica se é uma instrução insert
+    // ============================================================
+    // CRUD
+    // ============================================================
     public function select($sql, $parametros = null)
     {
+
         $sql = trim($sql);
-        //Verifica se a expressão é um select
+
+        // verifica se é uma instrução SELECT
         if (!preg_match("/^SELECT/i", $sql)) {
-            throw new Exception("Base de dados - Não é uma instrução em select", 1);
-            //die("Base de dados - Não é uma instrução em select");
+            throw new Exception('Base de dados - Não é uma instrução SELECT.');
         }
 
-        //Liga
+        // liga
         $this->ligar();
+
         $resultados = null;
 
-
-        //Comunica
+        // comunica
         try {
-            //Comunicação com o banco
+
+            // comunicação com a bd
             if (!empty($parametros)) {
                 $executar = $this->ligacao->prepare($sql);
                 $executar->execute($parametros);
@@ -69,33 +67,36 @@ class Database
                 $resultados = $executar->fetchAll(PDO::FETCH_CLASS);
             }
         } catch (PDOException $e) {
-            //Caso exista erros
+
+            // caso exista erro
             return false;
         }
 
-        //Encerra a conexão com o banco de dados
+        // desliga da bd
         $this->desligar();
 
-        //Retorna os resultados obtidos
+        // devolve os resultados obtidos
         return $resultados;
     }
-    //===============================================================
 
-    //Verfica se é uma instrução insert
+    // ============================================================
     public function insert($sql, $parametros = null)
     {
+
+        $sql = trim($sql);
+
+        // verifica se é uma instrução INSERT
         if (!preg_match("/^INSERT/i", $sql)) {
-            throw new Exception("Base de dados - Não é uma instrução em insert", 1);
-            //die("Base de dados - Não é uma instrução em select");
+            throw new Exception('Base de dados - Não é uma instrução INSERT.');
         }
 
-        //Liga
+        // liga
         $this->ligar();
 
-        $resultados = null;
-
+        // comunica
         try {
-            //Comunicação com o banco
+
+            // comunicação com a bd
             if (!empty($parametros)) {
                 $executar = $this->ligacao->prepare($sql);
                 $executar->execute($parametros);
@@ -104,32 +105,33 @@ class Database
                 $executar->execute();
             }
         } catch (PDOException $e) {
-            //Caso exista erros
+
+            // caso exista erro
             return false;
         }
 
-        //Encerra a conexão com o banco de dados
+        // desliga da bd
         $this->desligar();
-
-        //Retorna os resultados obtidos
-        return $resultados;
     }
-    //===============================================================
-    //Verifica se é uma instrução update
-    public function Update($sql, $parametros = null)
+
+    // ============================================================
+    public function update($sql, $parametros = null)
     {
+
+        $sql = trim($sql);
+
+        // verifica se é uma instrução UPDATE
         if (!preg_match("/^UPDATE/i", $sql)) {
-            throw new Exception("Base de dados - Não é uma instrução em update", 1);
-            //die("Base de dados - Não é uma instrução em select");
+            throw new Exception('Base de dados - Não é uma instrução UPDATE.');
         }
 
-        //Liga
+        // liga
         $this->ligar();
 
-        $resultados = null;
-
+        // comunica
         try {
-            //Comunicação com o banco
+
+            // comunicação com a bd
             if (!empty($parametros)) {
                 $executar = $this->ligacao->prepare($sql);
                 $executar->execute($parametros);
@@ -138,32 +140,33 @@ class Database
                 $executar->execute();
             }
         } catch (PDOException $e) {
-            //Caso exista erros
+
+            // caso exista erro
             return false;
         }
 
-        //Encerra a conexão com o banco de dados
+        // desliga da bd
         $this->desligar();
-
-        //Retorna os resultados obtidos
-        return $resultados;
     }
-    //===============================================================
-    //Verifica se é uma instrução delete
+
+    // ============================================================
     public function delete($sql, $parametros = null)
     {
+
+        $sql = trim($sql);
+
+        // verifica se é uma instrução DELETE
         if (!preg_match("/^DELETE/i", $sql)) {
-            throw new Exception("Base de dados - Não é uma instrução em delete", 1);
-            //die("Base de dados - Não é uma instrução em select");
+            throw new Exception('Base de dados - Não é uma instrução DELETE.');
         }
 
-        //Liga
+        // liga
         $this->ligar();
 
-        $resultados = null;
-
+        // comunica
         try {
-            //Comunicação com o banco
+
+            // comunicação com a bd
             if (!empty($parametros)) {
                 $executar = $this->ligacao->prepare($sql);
                 $executar->execute($parametros);
@@ -172,36 +175,36 @@ class Database
                 $executar->execute();
             }
         } catch (PDOException $e) {
-            //Caso exista erros
+
+            // caso exista erro
             return false;
         }
 
-        //Encerra a conexão com o banco de dados
+        // desliga da bd
         $this->desligar();
-
-        //Retorna os resultados obtidos
-        return $resultados;
     }
 
-    //===============================================================
-    //Método genérico 
-    //===============================================================
 
-    //Verifica se é uma instrução diferente das anteriores
+    // ============================================================
+    // GENÉRICA
+    // ============================================================
     public function statement($sql, $parametros = null)
     {
+
+        $sql = trim($sql);
+
+        // verifica se é uma instrução diferente das anteriores
         if (preg_match("/^(SELECT|INSERT|UPDATE|DELETE)/i", $sql)) {
-            throw new Exception("Base de dados - Instrução inválida", 1);
-            //die("Base de dados - Não é uma instrução em select");
+            throw new Exception('Base de dados - Instrução inválida.');
         }
 
-        //Liga
+        // liga
         $this->ligar();
 
-        $resultados = null;
-
+        // comunica
         try {
-            //Comunicação com o banco
+
+            // comunicação com a bd
             if (!empty($parametros)) {
                 $executar = $this->ligacao->prepare($sql);
                 $executar->execute($parametros);
@@ -210,44 +213,12 @@ class Database
                 $executar->execute();
             }
         } catch (PDOException $e) {
-            //Caso exista erros
+
+            // caso exista erro
             return false;
         }
 
-        //Encerra a conexão com o banco de dados
+        // desliga da bd
         $this->desligar();
-
-        //Retorna os resultados obtidos
-        return $resultados;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-/*  
-1.Ligar
-2. Comunicar
-3. Fechar
-
-
-CRUD
-Create  -INSERT
-Read    -SELECT
-Update  -UPDATE
-Delete  -DELETE
-
-define('MYSQL_SERVER',   'localhost');
-define('MYSQL_DATABSE',  'php_store');
-define('MYSQL_USER',     'user_php_store');
-define('MYSQL+PASS',     '');
-define('MYSQL_CHARSET',  'utf-8');
-*/

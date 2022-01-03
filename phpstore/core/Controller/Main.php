@@ -1,126 +1,64 @@
 <?php
 
-namespace Core\Controller;
+namespace core\Controller;
 
-use Core\Classes\Database;
+use core\Classes\Database;
 use Core\Classes\EnviarEmail;
 use Core\Classes\Store;
-use Core\Models\Clientes;
+use Core\models\Clientes;
 
 class Main
 {
-    //==========================================================
-    //Apresenta a pagina index
+
+    // ===========================================================
     public function index()
     {
-        Store::layout([
-            'Layout/Html_Header',
-            'Layout/Header',    //Header que contém a navegação do header
-            'inicio',
-            'Layout/Footer',
-            'Layout/Html_Footer',
+
+        Store::Layout([
+            'layouts/html_header',
+            'layouts/header',
+            'index/inicio',
+            'layouts/footer',
+            'layouts/html_footer',
         ]);
-    }
-
-    //==========================================================
-    //Apresenta a pagina da loja 
-    public function loja()
-    {
-        Store::layout([
-            'Layout/Html_Header',
-            'Layout/Header',    //Header que contém a navegação do header
-            'Loja',
-            'Layout/Footer',
-            'Layout/Html_Footer',
-        ]);
-    }
-
-    //==========================================================
-    //Apresneta a tela de novo cliente
-    public function novo_cliente()
-    {
-        //Verifica se já existe uma sessão iniciada
-        if (Store::clientelog()) {
-            $this->index();
-            return;
-        }
-
-        Store::layout([
-            'Layout/Html_Header',
-            'Layout/Header',    //Header que contém a navegação do header
-            'criar_cliente',
-            'Layout/Footer',
-            'Layout/Html_Footer',
-        ]);
-    }
-
-
-    public function criar_cliente()
-    {
-        //Verifica se já existe sessao
-        if (Store::clientelog()) {
-            $this->index();
-            return;
-        }
-
-        //Verifica se existe uma ação de submit
-        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-            $this->index();
-            return;
-        }
-
-        //Criar novo cliente
-        //Verificação de senha (Senha 1 = Senha2)
-        if ($_POST['text_senha_1'] !== $_POST['text_senha_2']) {
-
-            //Senhas diferentes
-            $_SESSION['erro'] = 'As senhas estão diferentes, verifique novamente';
-            $this->novo_cliente();
-            return;
-        }
-
-        //Base de dados Verificar se não já  existe um cliente com o mesmo email 
-
-        $cliente = new Clientes();
-
-        /* if ($cliente->verificar_email_existe($_POST['text_email'])) {
-
-             $_SESSION['error'] = 'Já existe um email cadastrado';
-             $this->novo_cliente();
-             return;
-         }
-        */
-
-        //inserir novo cliente na base de dados e devolver o purl
-        $email_cliente = strtolower(trim($_POST['text_email']));
-        $purl = Store::criarhash();
-
-        //enviar do email para o cliente
-        $email = new EnviarEmail();
-        $resultado = $email->enviar_email_confirmacao_novo_cliente($email_cliente, $purl);
-        if ($resultado) {
-            $cliente->registrar_cliente($purl);
-        }
-
-        if ($resultado == true) {
-            Store::layout([
-                'Layout/Html_Header',
-                'Layout/Header',
-                'Criar_Cliente_Sucesso',
-                'Layout/Footer',
-                'Layout/Html_Footer',
-            ]);
-            return;
-        } else {
-            echo 'Aconteceu um erro';
-        }
-
-        //Criar o link purl
-
     }
 
     // ===========================================================
-    public function confirmar_email()
+    public function loja()
+    {
+
+        // apresenta a página da loja
+
+        Store::Layout([
+            'layouts/html_header',
+            'layouts/header',
+            'index/loja',
+            'layouts/footer',
+            'layouts/html_footer',
+        ]);
+    }
+
+    // ===========================================================
+    public function novo_cliente()
+    {
+        // verifica se já existe sessão aberta
+        if (Store::clientelog()) {
+            $this->index();
+            return;
+        }
+
+        // apresenta o layout para criar um novo utilizador
+        Store::Layout([
+            'layouts/html_header',
+            'layouts/header',
+            'index/criar_cliente',
+            'layouts/footer',
+            'layouts/html_footer',
+        ]);
+    }
+
+    // ===========================================================
+    public function criar_cliente()
     {
 
         // verifica se já existe sessao
@@ -129,141 +67,167 @@ class Main
             return;
         }
 
-        // verificar se existe na query string um purl
-        if (!isset($_GET['purl'])) {
+        // verifica se houve submissão de um formulário
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
             $this->index();
             return;
         }
 
-        $purl = $_GET['purl'];
+        // verifica se senha 1 = senha 2
+        if ($_POST['text_senha_1'] !== $_POST['text_senha_2']) {
 
-        // verifica se o purl é válido
-        if (strlen($purl) != 12) {
-            $this->index();
+            // as passwords são diferentes
+            $_SESSION['erro'] = 'As senhas não estão iguais.';
+            $this->novo_cliente();
             return;
         }
 
+        // verifica na base de dados se existe cliente com mesmo email
         $cliente = new Clientes();
-        $resultado = $cliente->validar_email($purl);
 
-        if (!$resultado) {
+        if ($cliente->verificar_email_existe($_POST['text_email'])) {
 
-            // apresenta o layout para informar a conta foi confirmada com sucesso
+            $_SESSION['erro'] = 'Já existe um cliente com o mesmo email.';
+            $this->novo_cliente();
+            return;
+        }
+
+        // inserir novo cliente na base de dados e devolver o purl
+        $email_cliente = strtolower(trim($_POST['text_email']));
+        $purl = $cliente->registrar_cliente();
+
+        // envio do email para o cliente
+        $email = new EnviarEmail();
+        $resultado = $email->enviar_email_confirmacao_novo_cliente($email_cliente, $purl);
+
+        if ($resultado) {
+
+            // apresenta o layout para informar o envio do email
             Store::Layout([
-                'layout/html_header',
-                'layout/header',
-                'ContaConfirmadaSucesso',
-                'layout/footer',
-                'layout/html_footer',
+                'layouts/html_header',
+                'layouts/header',
+                'index/criar_cliente_sucesso',
+                'layouts/footer',
+                'layouts/html_footer',
             ]);
             return;
         } else {
-
-            // redirecionar para a página inicial
-            Store::redirect();
+            echo 'Aconteceu um erro';
         }
     }
 
-    /* public function Contaconf()
+    // ===========================================================
+    public function conta_confirmada_sucesso()
     {
-        //Verifica se já existe um usuário logado
-        if (Store::clientelog()) {
-            Store::redirect();
-            return;
-        }
         Store::Layout([
-            'layout/html_header',
-            'layout/header',
-            'Contaconf',
-            'layout/footer',
-            'layout/html_footer',
+            'layouts/html_header',
+            'layouts/header',
+            'index/conta_confirmada_sucesso',
+            'layouts/footer',
+            'layouts/html_footer',
         ]);
     }
-*/
 
+    // ===========================================================
     public function login()
     {
 
-        //Verifica se já existe um usuário logado
+        // verifica se já existe um utilizador logado
         if (Store::clientelog()) {
             Store::redirect();
             return;
         }
 
-        //Apresentação do formulário de login
-        Store::layout([
-            'Layout/Html_Header',
-            'Layout/Header',
-            'Login',
-            'Layout/Footer',
-            'Layout/Html_Footer',
+        // apresentação do formulário de login
+        Store::Layout([
+            'layouts/html_header',
+            'layouts/header',
+            'index/login_frm',
+            'layouts/footer',
+            'layouts/html_footer',
         ]);
     }
 
-    public function Login_Submit()
+    // ===========================================================
+    public function login_submit()
     {
-        //Verifica se já existe um usuário logado
+
+        // verifica se já existe um utilizador logado
         if (Store::clientelog()) {
             Store::redirect();
             return;
         }
-        //Verifica se foi efetuado o Post de Login
+
+        // verifica se foi efetuado o post do formulário de login
         if ($_SERVER['REQUEST_METHOD'] != 'POST') {
             Store::redirect();
             return;
         }
-        //Valida se os campos estão corretos
-        //Buscar informações no banco (ver o Login)
 
+        // validar se os campos vieram corretamente preenchidos
         if (
             !isset($_POST['text_usuario']) ||
-            !isset($_POST['text_password']) ||
-            !filter_var(trim($_POST['text_usuario']), FILTER_SANITIZE_EMAIL)
+            !isset($_POST['text_senha']) ||
+            !filter_var(trim($_POST['text_usuario']), FILTER_VALIDATE_EMAIL)
         ) {
-            //Erro ao preencher o formulário
-            $_SESSION['erro'] = 'Erro de preenchimento de formulário';
-            Store::redirect('Login');
+            // erro de preenchimento do formulário
+            $_SESSION['erro'] = 'Login inválido';
+            Store::redirect('login');
             return;
         }
 
-        //prepara os dados para o model 
+        // prepara os dados para o model
         $usuario = trim(strtolower($_POST['text_usuario']));
-        $senha = trim($_POST['text_password']);
+        $senha = trim($_POST['text_senha']);
 
-        $parametros = [
-            ':usuario' => $usuario,
-            ':password' => $senha,
-        ];
-        //Carrega o model e verifica se o login é válido 
+        // carrega o model e verifica se login é válido
         $cliente = new Clientes();
         $resultado = $cliente->validar_login($usuario, $senha);
 
-        //Analisa o resultado 
-
-        //Login inválido
+        // analisa o resultado
         if (is_bool($resultado)) {
+
+            // login inválido
             $_SESSION['erro'] = 'Login inválido';
-            Store::redirect('Login');
+            Store::redirect('login');
             return;
         } else {
-            //Login válido
-            //$_SESSION['cliente'] = $resultado;
 
-            echo '<pre>';
-            print_r($resultado);
+            // login válido. Coloca os dados na sessão
+            $_SESSION['cliente'] = $resultado->id_cliente;
+            $_SESSION['usuario'] = $resultado->email;
+            $_SESSION['nome_cliente'] = $resultado->nome_completo;
+
+            // redirecionar para o início da nossa loja
+            Store::redirect();
         }
     }
 
-    //==========================================================
-    //Apresenta a pagina do carrinho
+    // ===========================================================
+    public function logout()
+    {
+
+        // remove as variáveis da sessão
+        unset($_SESSION['cliente']);
+        unset($_SESSION['usuario']);
+        unset($_SESSION['nome_cliente']);
+
+        // redireciona para o início da loja
+        Store::redirect();
+    }
+
+    // ===========================================================
     public function carrinho()
     {
-        Store::layout([
-            'Layout/Html_Header',
-            'Layout/Header',    //Header que contém a navegação do header
-            'carrinho',
-            'Layout/Footer',
-            'Layout/Html_Footer',
+
+        // apresenta a página do carrinho
+
+        Store::Layout([
+            'layouts/html_header',
+            'layouts/header',
+            'index/carrinho',
+            'layouts/footer',
+            'layouts/html_footer',
         ]);
     }
 }
