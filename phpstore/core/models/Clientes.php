@@ -30,7 +30,7 @@ class Clientes
     }
 
     // ===========================================================
-    public function registrar_cliente()
+    public function registar_cliente()
     {
 
         // regista o novo cliente na base de dados
@@ -43,7 +43,7 @@ class Clientes
         $parametros = [
             ':email' => strtolower(trim($_POST['text_email'])),
             ':senha' => password_hash(trim($_POST['text_senha_1']), PASSWORD_DEFAULT),
-            ':nome_completo' => trim($_POST['nome_completo']),
+            ':nome_completo' => trim($_POST['text_nome_completo']),
             ':morada' => trim($_POST['text_morada']),
             ':cidade' => trim($_POST['text_cidade']),
             ':telefone' => trim($_POST['text_telefone']),
@@ -102,6 +102,7 @@ class Clientes
             purl = NULL,
             activo = 1,
             updated_at = NOW()
+            WHERE id_cliente = :id_cliente
         ", $parametros);
 
         return true;

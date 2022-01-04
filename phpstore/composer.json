@@ -1,28 +1,22 @@
 {
     "name": "daniel.sousa/phpstore",
-    "description": "Loja online em php",
+    "description": "Loja Online em PHP",
     "type": "project",
-    "autoload": {
-        "psr-4": {
-            "DanielSousa\\Phpstore\\": "src/"
-        }
-    },
     "authors": [
         {
             "name": "Daniel Sousa",
-            "email": "S0us4.dan@gmail.com"
+            "email": "danieldeivedson2018@gmail.com"
         }
     ],
     "require": {
-        "phpmailer/phpmailer": "^6.5",
-        "firebase/php-jwt": "^5.5"
+        "phpmailer/phpmailer": "^6.2"
     },
-    "autoload-dev": {
+    "autoload": {
         "psr-4": {
-            "Core\\": "Core/"
+            "core\\": "core/"
         },
         "files": [
-            "Config.php"
+            "config.php"
         ]
     }
 }

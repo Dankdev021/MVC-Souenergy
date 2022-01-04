@@ -1,16 +1,16 @@
 <?php
 
-define("APP_NAME",          "WEBDAN");
-define("APP_VERSION",       "1.0.0");
+define('APP_NAME',          'PHPSTORE');
+define('APP_VERSION',       '1.0.0');
 
 define('BASE_URL',          'http://localhost:8000');
 
-//Mysql
+// MYSQL
 define('MYSQL_SERVER',      'localhost');
-define('MYSQL_DATABASE',     'php_store');
-define('MYSQL_USER',        'php_store_use'); //php_store_use
-define('MYSQL_PASS',        'va63hAqa5iQO'); //va63hAqa5iQO
-define('MYSQL_CHARSET',     'utf-8');
+define('MYSQL_DATABASE',    'php_store');
+define('MYSQL_USER',        'root');
+define('MYSQL_PASS',        '');
+define('MYSQL_CHARSET',     'utf8');
 
 //Email
 define('EMAIL_HOST', 'smtp.gmail.com');
